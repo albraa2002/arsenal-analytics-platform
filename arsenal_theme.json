@@ -1,0 +1,42 @@
+{
+  "name": "Arsenal Tech-Noir",
+  "dataColors": ["#EF0107", "#00F0FF", "#9C824A", "#0A1C3E", "#E6E6E6", "#1A2332", "#FF6B6B", "#00D4AA"],
+  "background": "#0D1117",
+  "foreground": "#E6E6E6",
+  "tableAccent": "#EF0107",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [{ "color": { "solid": { "color": "#0D1117" } } }],
+        "visualHeader": [{ "color": { "solid": { "color": "#0A1C3E" } } }],
+        "outspacePane": [{ "color": { "solid": { "color": "#0D1117" } } }],
+        "filterCard": [{ "color": { "solid": { "color": "#0A1C3E" } } }]
+      }
+    },
+    "textBox": {
+      "*": {
+        "fontColor": [{ "color": { "solid": { "color": "#E6E6E6" } } }]
+      }
+    },
+    "kpi": {
+      "*": {
+        "titleFontColor": [{ "color": { "solid": { "color": "#E6E6E6" } } }],
+        "valueFontColor": [{ "color": { "solid": { "color": "#EF0107" } } }],
+        "trendLineColor": [{ "color": { "solid": { "color": "#00F0FF" } } }]
+      }
+    },
+    "card": {
+      "*": {
+        "titleFontColor": [{ "color": { "solid": { "color": "#E6E6E6" } } }],
+        "valueFontColor": [{ "color": { "solid": { "color": "#EF0107" } } }]
+      }
+    },
+    "slicer": {
+      "*": {
+        "headerFontColor": [{ "color": { "solid": { "color": "#E6E6E6" } } }],
+        "fontColor": [{ "color": { "solid": { "color": "#E6E6E6" } } }],
+        "backgroundColor": [{ "color": { "solid": { "color": "#0A1C3E" } } }]
+      }
+    }
+  }
+}

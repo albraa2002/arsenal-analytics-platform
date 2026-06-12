@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arsenal FC · Analytics 2025/26</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+  <!-- ── Mobile Toggle ── -->
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ── Sidebar Navigation ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🔴</div>
+      <h1>ARSENAL FC</h1>
+      <p>2025/26 · Analytics</p>
+    </div>
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a class="active" data-page="overview"><span class="nav-icon">📊</span> Executive Overview</a></li>
+        <li><a data-page="tactical"><span class="nav-icon">🧠</span> Tactical Analysis</a></li>
+        <li><a data-page="match"><span class="nav-icon">🎯</span> Match Analysis</a></li>
+        <li><a data-page="player"><span class="nav-icon">👤</span> Player Analysis</a></li>
+        <li><a data-page="fpl"><span class="nav-icon">💰</span> FPL Intelligence</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      Built with Plotly · PapaParse<br>
+      Data: FBref · Understat · FPL · StatsBomb
+    </div>
+  </aside>
+
+  <!-- ── Main Content ── -->
+  <main class="main-content">
+
+    <!-- ════════════════════════ OVERVIEW PAGE ════════════════════════ -->
+    <section class="page active" id="page-overview">
+      <div class="page-header">
+        <div>
+          <h2>📊 Executive Overview</h2>
+          <p>Season 2025/26 · Aggregate Performance Metrics</p>
+        </div>
+        <div class="header-filters">
+          <select id="overviewSeason"><option value="2025-2026">2025-2026</option></select>
+        </div>
+      </div>
+      <div style="padding: 16px 0;">
+        <div class="kpi-grid" id="overviewKPIs"></div>
+        <div class="grid-2">
+          <div class="glass-card"><h3>📈 Form Trend (Points per Match)</h3><div class="chart-container" id="chartFormTrend"></div></div>
+          <div class="glass-card"><h3>⚽ Goals &amp; xG Trend</h3><div class="chart-container" id="chartGoalsTrend"></div></div>
+        </div>
+        <div class="grid-2-1">
+          <div class="glass-card"><h3>📅 Match Result Timeline</h3><div class="chart-container" id="chartResultTimeline"></div></div>
+          <div class="glass-card"><h3>📊 Result Split</h3><div class="chart-container" id="chartResultSplit"></div></div>
+        </div>
+        <div class="grid-3">
+          <div class="glass-card"><h3>⚽ Goal Analysis</h3><div class="chart-container" id="chartGoalAnalysis"></div></div>
+          <div class="glass-card"><h3>🎯 xG vs Actual</h3><div class="chart-container" id="chartXgActual"></div></div>
+          <div class="glass-card"><h3>🛡️ Defensive Summary</h3><div class="chart-container" id="chartDefensive"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════ TACTICAL PAGE ════════════════════════ -->
+    <section class="page" id="page-tactical">
+      <div class="page-header">
+        <div>
+          <h2>🧠 Tactical Analysis</h2>
+          <p>Passing networks · Average positions · Pressing · Zone attacks</p>
+        </div>
+        <div class="header-filters">
+          <select id="tacticalMatch"><option value="all">All Matches</option></select>
+        </div>
+      </div>
+      <div style="padding: 16px 0;">
+        <div class="grid-2">
+          <div class="glass-card"><h3>🔄 Passing Network</h3><div class="chart-container" id="chartPassNetwork"></div></div>
+          <div class="glass-card"><h3>📍 Average Positions (4-3-3)</h3><div class="chart-container" id="chartAvgPositions"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="glass-card"><h3>🔥 Event Heatmap</h3><div class="chart-container" id="chartHeatmap"></div></div>
+          <div class="glass-card"><h3>⚡ Pressing Intensity</h3><div class="chart-container" id="chartPressing"></div></div>
+        </div>
+        <div class="grid-3">
+          <div class="glass-card"><h3>📊 Progressive Passes</h3><div class="chart-container" id="chartProgPasses"></div></div>
+          <div class="glass-card"><h3>🎯 Zone 14 Entries</h3><div class="chart-container" id="chartZone14"></div></div>
+          <div class="glass-card"><h3>🛡️ PPDA by Match</h3><div class="chart-container" id="chartPPDA"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════ MATCH PAGE ════════════════════════ -->
+    <section class="page" id="page-match">
+      <div class="page-header">
+        <div>
+          <h2>🎯 Match Analysis</h2>
+          <p>xG timeline · Shot maps · Momentum · Tactical breakdown</p>
+        </div>
+        <div class="header-filters">
+          <select id="matchSelector"></select>
+        </div>
+      </div>
+      <div style="padding: 16px 0;">
+        <div class="glass-card" id="matchInfoCard">
+          <div class="text-center" style="padding: 8px 0;">
+            <h3 id="matchTitle" style="color:white;font-size:1.2rem;margin-bottom:8px;">Arsenal vs Opponent</h3>
+            <div style="font-size:3rem;font-family:var(--font-mono);font-weight:700;" id="matchScore">0 - 0</div>
+            <div style="margin-top:8px;" id="matchResultBadge"><span class="badge-draw">DRAW</span></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="glass-card"><h3>📈 xG Timeline</h3><div class="chart-container" id="chartXgTimeline"></div></div>
+          <div class="glass-card"><h3>🎯 Shot Map</h3><div class="chart-container" id="chartShotMapMatch"></div></div>
+        </div>
+        <div class="grid-3">
+          <div class="glass-card"><h3>🎯 Shot Outcome</h3><div class="chart-container" id="chartShotOutcome"></div></div>
+          <div class="glass-card"><h3>🦶 Body Part</h3><div class="chart-container" id="chartBodyPart"></div></div>
+          <div class="glass-card"><h3>📊 Shot Situation</h3><div class="chart-container" id="chartSituation"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════ PLAYER PAGE ════════════════════════ -->
+    <section class="page" id="page-player">
+      <div class="page-header">
+        <div>
+          <h2>👤 Player Analysis</h2>
+          <p>Radar charts · Per-90 metrics · Shot maps · Heatmaps</p>
+        </div>
+        <div class="header-filters">
+          <select id="playerSelector"></select>
+          <select id="playerCompare"><option value="none">vs — None</option></select>
+        </div>
+      </div>
+      <div style="padding: 16px 0;">
+        <div class="glass-card player-info-card" id="playerInfoCard">
+          <div class="player-avatar" id="playerAvatar">B</div>
+          <div class="player-details">
+            <h2 id="playerName">Bukayo Saka</h2>
+            <p id="playerMeta">MID · Age 23 · #7</p>
+            <div class="stats-row" id="playerQuickStats"></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="glass-card"><h3>📊 Player Radar</h3><div class="chart-container" id="chartPlayerRadar"></div></div>
+          <div class="glass-card"><h3>📊 Per-90 Metrics</h3><div class="chart-container" id="chartPer90"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="glass-card"><h3>🎯 Shot Map</h3><div class="chart-container" id="chartPlayerShotMap"></div></div>
+          <div class="glass-card"><h3>🔥 Touch Heatmap</h3><div class="chart-container" id="chartPlayerHeatmap"></div></div>
+        </div>
+        <div class="glass-card"><h3>📈 Performance Trend (Rolling 5-match)</h3><div class="chart-container" id="chartPlayerTrend"></div></div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════ FPL PAGE ════════════════════════ -->
+    <section class="page" id="page-fpl">
+      <div class="page-header">
+        <div>
+          <h2>💰 FPL Intelligence</h2>
+          <p>Fantasy Premier League · Prices · Ownership · Captain picks</p>
+        </div>
+        <div class="header-filters">
+          <select id="fplPosition"><option value="all">All Positions</option></select>
+        </div>
+      </div>
+      <div style="padding: 16px 0;">
+        <div class="kpi-grid" id="fplKPIs"></div>
+        <div class="grid-2">
+          <div class="glass-card"><h3>💵 Price vs Points</h3><div class="chart-container" id="chartFplValue"></div></div>
+          <div class="glass-card"><h3>👥 Ownership</h3><div class="chart-container" id="chartFplOwnership"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="glass-card"><h3>🔮 Predicted Points (Next 3 GW)</h3><div class="chart-container" id="chartFplPredicted"></div></div>
+          <div class="glass-card"><h3>👑 Captaincy Analysis</h3><div class="chart-container" id="chartFplCaptain"></div></div>
+        </div>
+        <div class="glass-card"><h3>📋 Arsenal FPL Squad</h3><div id="fplTable"></div></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
