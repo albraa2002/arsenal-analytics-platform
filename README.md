@@ -1,141 +1,116 @@
-<<<<<<< HEAD
-# Arsenal FC — Football Analytics Platform 2025/26
+# Arsenal FC — Football Analytics Platform
 
-Production-grade, end-to-end football intelligence system for Arsenal FC's 2025/2026 season. Built for data engineers, analysts, and Power BI architects.
+A football analytics portfolio project exploring how match, team, and player data can be organized into a repeatable workflow for analysis and visualization.
 
-## Architecture
+> **Project status:** This repository describes an intended end-to-end analytics architecture. Confirm the availability of each extractor, model, dashboard, and data source in the current code before treating any component as production-ready. This project is for learning and portfolio demonstration, not an official Arsenal FC product.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                   DATA EXTRACTION                       │
-│  FBref · Understat · FPL API · StatsBomb · Fotmob · TM │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│                   DATA CLEANING                         │
-│  Column norm · Missing values · Outliers · Duplicates  │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│                 ENTITY RESOLUTION                       │
-│        rapidfuzz · aliases · cross-source matching      │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│                 DATA WAREHOUSE (Star Schema)             │
-│   dim_* · fact_matches · fact_player_stats · fact_*    │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│               FEATURE ENGINEERING                       │
-│  PPDA · Field Tilt · xG/90 · Progressive · Tactical    │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│              MACHINE LEARNING                           │
-│  XGBoost · Random Forest · Logistic · Injury · FPL     │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│              VISUALIZATION                              │
-│  mplsoccer · Plotly · Heatmaps · Pass/Shot Maps         │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│            POWER BI EXPORT                              │
-│  CSV · SQLite · Data Dictionary · Schema Docs           │
-└─────────────────────────────────────────────────────────┘
+## Project Goals
+
+- Bring football data into a consistent analytical structure.
+- Document data cleaning, normalization, and entity matching.
+- Build reusable team, player, and match metrics.
+- Prepare outputs that can support Python visualizations and BI reporting.
+- Explore how descriptive analysis and predictive modeling differ.
+
+## Intended Workflow
+
+1. **Ingest** data from documented public/open sources where access and terms permit.
+2. **Validate and clean** schemas, duplicates, missing values, and inconsistent labels.
+3. **Resolve entities** such as teams and players across source datasets.
+4. **Model data** into analytical tables suitable for match, team, and player analysis.
+5. **Engineer metrics** such as per-90 statistics and selected tactical indicators when the required inputs exist.
+6. **Analyze and visualize** results using notebooks and appropriate charting tools.
+7. **Export** documented outputs for downstream BI use.
+
+## Suggested Repository Structure
+
+The following is a target structure; actual files in the repository may differ.
+
+```text
+data/                    # Local/raw/processed data (do not commit restricted data)
+scripts/
+  extraction/
+  preprocessing/
+  feature_engineering/
+  integration/
+  modeling/
+  visualization/
+database/
+config/
+notebooks/
+dashboards/
+outputs/
+docs/
+pipeline.py
+requirements.txt
 ```
 
-## Project Structure
+## Data Sources & Responsible Use
 
-```
-football_analytics_project/
-├── data/                    # Data lake (raw → processed → features → final)
-├── scripts/
-│   ├── extraction/          # 6 source-specific extractors
-│   ├── preprocessing/       # Cleaning & normalization
-│   ├── feature_engineering/ # Team, player & tactical metrics
-│   ├── integration/         # Entity resolution + Power BI export
-│   ├── modeling/            # ML models (match, player, injury, FPL)
-│   └── visualization/       # mplsoccer & Plotly dashboards
-├── database/                # Star schema definitions & setup
-├── config/                  # Central configuration
-├── notebooks/               # Jupyter analysis notebooks
-├── dashboards/              # Power BI (.pbip) templates
-├── outputs/                 # Plots, reports, trained models
-├── docs/                    # Data dictionary & documentation
-├── pipeline.py              # End-to-end orchestrator
-└── requirements.txt
-```
+Potential sources previously considered for this project include FBref, Understat, the Fantasy Premier League API, StatsBomb Open Data, FotMob, and Transfermarkt. Availability, permitted usage, API stability, and licensing vary by source. Before enabling an extractor:
 
-## Data Sources
+- Document the exact endpoint or page and retrieval date.
+- Follow the source's terms, robots policy, rate limits, and license.
+- Prefer official APIs and openly licensed datasets where available.
+- Never commit credentials, private data, or data you do not have permission to redistribute.
 
-| Source | Type | Data |
-|--------|------|------|
-| FBref | Scraping | Standard stats, shooting, passing, possession, defense, goalkeeping |
-| Understat | Scraping (JSON) | xG, xGA, xPTS, shot maps, player shooting |
-| FPL API | REST API | Player prices, ownership, ICT, bonus, gameweek history |
-| StatsBomb | GitHub Open Data | Event data, passes, carries, pressures, freeze frames |
-| Fotmob | Internal API | League tables, team matches, squad info |
-| Transfermarkt | Scraping | Squad values, injuries, transfers, contracts |
+## Getting Started
 
-## Quick Start
+1. Clone the repository.
+2. Inspect the current files and confirm that `requirements.txt` and `pipeline.py` exist.
+3. Create a virtual environment and install only the dependencies listed for the implemented features.
+4. Configure any required source settings locally; keep secrets in environment variables.
+5. Run only the pipeline phases that are implemented and documented in the repository.
+
+Example environment setup:
 
 ```bash
-# Clone / navigate to project
-cd football_analytics_project
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run full pipeline
-python pipeline.py
-
-# Run a specific phase
-python pipeline.py --phase 1   # Extraction only
-python pipeline.py --phase 4   # Database setup only
+python -m venv .venv
 ```
 
-## Power BI Setup
+Activate the environment:
 
-1. Run `python pipeline.py` to generate all CSVs and SQLite DB
-2. Open Power BI Desktop
-3. Get Data → CSV / SQLite → navigate to `data/final/` or `database/`
-4. Apply star schema relationships from `docs/relationships.md`
-5. Apply theme from `dashboards/arsenal_theme.json`
+- Windows: `.venv\\Scripts\\activate`
+- macOS/Linux: `source .venv/bin/activate`
 
-## Dashboard Pages
+Then, if a requirements file is present:
 
-| Page | Content |
-|------|---------|
-| Executive Overview | Season KPIs, league position, form, xG trends |
-| Tactical Analysis | Average positions, passing networks, PPDA, field tilt |
-| Match Analysis | xG timeline, shot maps, pass maps, heatmaps |
-| Player Analysis | Radars, percentiles, per-90 metrics, comparisons |
-| Recruitment Analysis | Market values, contract expiry, scouting targets |
-| Injury Analysis | Injury risk, workload, minutes tracking |
-| FPL Intelligence | Value picks, ownership, predicted points, transfers |
-| Predictive Analytics | Match outcomes, performance forecasts |
+```bash
+python -m pip install -r requirements.txt
+```
 
-## Design System
+**Note:** Exact execution commands depend on the current code and configuration. Verify them before running a full pipeline.
 
-- **Theme**: Dark Mode / Tech-Noir / Glassmorphism
-- **Typography**: IBM Plex Mono (KPIs), Cairo (headers/body)
-- **Palette**: Arsenal Red `#EF0107`, Neon Cyan `#00F0FF`, Dark Navy `#0A1C3E`
+## Analysis Ideas
 
-## Models
+- Team performance over time
+- Expected goals (xG) compared with actual goals, where data is available
+- Player contribution using per-90 metrics and appropriate minutes thresholds
+- Passing and chance-creation patterns
+- Recruitment comparisons with transparent assumptions
+- Fantasy Premier League value analysis, if the relevant data is available
 
-| Model | Target | Algorithm |
-|-------|--------|-----------|
-| Match Predictor | H/D/A | XGBoost, RF, Logistic Regression |
-| Player Performance | xG, xA, Points | XGBoost, RF |
-| Injury Risk | Probability | XGBoost, Gradient Boosting, RF |
-| FPL Forecaster | GW Points | XGBoost, Ridge, Linear |
+## Validation & Limitations
+
+- Compare row counts and key fields before and after cleaning.
+- Document metric definitions and units.
+- Avoid comparing metrics across sources without checking their definitions.
+- Treat predictive outputs as estimates; report evaluation results and limitations before making claims.
+- Do not claim model accuracy, production readiness, or business impact without reproducible evidence.
+
+## Roadmap
+
+- [ ] Document the actual repository structure and tested commands.
+- [ ] Add a small, redistributable sample dataset or a synthetic example.
+- [ ] Include a reproducible notebook with a clear analytical question.
+- [ ] Add screenshots of real, generated visualizations.
+- [ ] Document data lineage, metric definitions, and limitations.
+- [ ] Add automated checks for data validation where appropriate.
+
+## Disclaimer
+
+This is an independent educational/portfolio project and is not affiliated with, endorsed by, or an official product of Arsenal FC.
 
 ## License
 
-MIT — Built for portfolio and educational purposes.
-=======
-# arsenal-analytics-platform
->>>>>>> d3c431fdb2bab07979e0cf4395930e136f8ea02a
+Check the repository's existing license file before redistributing or reusing the code. If no license is present, all rights remain with the copyright holder by default.
